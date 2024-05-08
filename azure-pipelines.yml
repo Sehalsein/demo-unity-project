@@ -31,6 +31,6 @@ steps:
     displayName: "Install cli"
     
   - script: |
-      pnpm unity:build -t macos -p ../../ -uv 2021.3.38f1 -n AzureBuild -c
+      pnpm unity:build -t macos -p ../../ -uv 2021.3.38f1 -n AzureBuild -c -v
     workingDirectory: 'cli'
     displayName: 'Build unity project'
