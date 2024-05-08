@@ -15,21 +15,6 @@ parameters:
     - macos
     - windows
     - linux
-  - name: project
-    displayName: Project path
-    type: string
-    default: '../..'
-  - name: clean
-    displayName: Clean build
-    type: boolean
-    default: false
-  - name: verbose
-    displayName: Verbose
-    type: boolean
-    default: false
-  - name: myString
-    type: string
-    default: a string
 
 trigger:
 - main
@@ -56,6 +41,6 @@ steps:
     displayName: "Install cli"
     
   - script: |
-      pnpm unity:build -t ${{ parameters.target }} -p ${{ parameters.project }} -uv 2021.3.38f1 -n AzureBuild -c -v
+      pnpm unity:build -t ${{ parameters.target }} -p ../../ -uv 2021.3.38f1 -n AzureBuild -c -v
     workingDirectory: 'cli'
     displayName: 'Build unity project'
