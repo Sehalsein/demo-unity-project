@@ -26,6 +26,6 @@ steps:
     displayName: "Setup pnpm"
 
   - script: |
-      node -v
-      cd cli && pnpm install
+      pnpm install
     displayName: "Install cli"
+    workingDirectory: 'cli'
