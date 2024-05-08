@@ -3,6 +3,9 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+variables:
+  pnpm_config_cache: $(Pipeline.Workspace)/.pnpm-store
+
 trigger:
 - main
 
@@ -10,15 +13,19 @@ pool:
   name: sehal-local
 
 steps:
-  - task: NodeTool@0
+  - task: Cache@2
     inputs:
-      versionSpec: '20.x'
-    displayName: 'Install Node.js'
+      key: 'pnpm | "$(Agent.OS)" | pnpm-lock.yaml'
+      path: $(pnpm_config_cache)
+    displayName: Cache pnpm
 
   - script: |
-      cd cli && npm install
-    displayName: "Installing cli"
-    
+      corepack enable
+      corepack prepare pnpm@latest-9 --activate
+      pnpm config set store-dir $(pnpm_config_cache)
+    displayName: "Setup pnpm"
+
   - script: |
-      cd cli && npm run unity:build -t macos -p ../../ -uv 2021.3.38f1 -n AzurePipelineTest -c -v
-    displayName: "Building unity project"
+      node -v
+      cd cli && pnpm install
+    displayName: "Install cli"
