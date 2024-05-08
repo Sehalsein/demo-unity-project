@@ -1,23 +1,30 @@
-import { exec as executeCommand } from "child_process";
+import { spawn } from "child_process";
 
 export async function exec(command: string, verbose = false) {
   console.log(`Executing: ${command}`);
 
   return new Promise<{ success: boolean }>((resolve, reject) => {
-    const result = executeCommand(command);
+    const cp = spawn(command, { shell: true });
 
     if (verbose) {
-      result.stdout?.on("data", console.log);
-      result.stderr?.on("data", console.error);
+      cp.stdout?.on("data", (data) => console.log(data.toString()));
+      cp.stderr?.on("data", (data) => console.error(data.toString()));
     }
 
-    result.on("error", (error) => {
+    cp.on("error", (error) => {
       console.error(error);
       reject(error);
     });
 
-    result.on("close", (code) => {
+    cp.on("exit", (code: number) => {
       console.log(`Command exited with code ${code}`);
+      resolve({
+        success: code === 0,
+      });
+    });
+
+    cp.on("close", (code) => {
+      console.log(`Command closed with code ${code}`);
       resolve({
         success: code === 0,
       });
