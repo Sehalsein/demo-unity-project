@@ -77,27 +77,36 @@ public class ProjectBuilder : MonoBehaviour
 
     static void Build(string[] scenes, BuildTarget target, string output, BuildOptions options = BuildOptions.None)
     {
-        BuildPlayerOptions bpo = new BuildPlayerOptions();
-        bpo.scenes = scenes;
-        bpo.locationPathName = output;
-        bpo.target = target;
-        bpo.options = options;
-
-
-        BuildReport report = BuildPipeline.BuildPlayer(bpo);
-        BuildSummary summary = report.summary;
-
-        Debug.Log("----------------------------------------");
-        if (summary.result == BuildResult.Succeeded)
+        try
         {
-            Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-        }
+            BuildPlayerOptions bpo = new BuildPlayerOptions();
+            bpo.scenes = scenes;
+            bpo.target = target;
+            bpo.locationPathName = output;
+            bpo.options = options;
 
-        if (summary.result == BuildResult.Failed)
-        {
-            Debug.Log("Build failed");
+
+            BuildReport report = BuildPipeline.BuildPlayer(bpo);
+            BuildSummary summary = report.summary;
+
+            switch (summary.result)
+            {
+                case BuildResult.Succeeded:
+                    EditorApplication.Exit(0);
+                    break;
+                case BuildResult.Unknown:
+                case BuildResult.Failed:
+                case BuildResult.Cancelled:
+                default:
+                    EditorApplication.Exit(1);
+                    break;
+            }
         }
-        Debug.Log("----------------------------------------");
+        catch (Exception ex) when (ex is Exception)
+        {
+            Debug.Log("BUILD FAILED: " + ex.Message);
+            EditorApplication.Exit(1);
+        }
     }
 
     private static string GetArg(string name)
@@ -132,6 +141,5 @@ class Platform
         executablePath = _executablePath;
     }
 }
-
 
 #endif

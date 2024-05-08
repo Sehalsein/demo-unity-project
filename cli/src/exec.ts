@@ -17,6 +17,7 @@ export async function exec(command: string, verbose = false) {
     });
 
     result.on("close", (code) => {
+      console.log(`Command exited with code ${code}`);
       resolve({
         success: code === 0,
       });
