@@ -64,22 +64,22 @@ public class ProjectBuilder : MonoBehaviour
     static void BuildCLI()
     {
         string target = GetArg("-target");
-        string path = GetArg("-path");
+        string output = GetArg("-output");
 
-        if (target == null || path == null)
+        if (target == null || output == null)
         {
             throw new NotSupportedException("Target and path are required.");
         }
 
         List<string> scenes = GetAllScenes();
-        Build(scenes.ToArray(), (BuildTarget)Enum.Parse(typeof(BuildTarget), target), path);
+        Build(scenes.ToArray(), (BuildTarget)Enum.Parse(typeof(BuildTarget), target), output);
     }
 
-    static void Build(string[] scenes, BuildTarget target, string path, BuildOptions options = BuildOptions.None)
+    static void Build(string[] scenes, BuildTarget target, string output, BuildOptions options = BuildOptions.None)
     {
         BuildPlayerOptions bpo = new BuildPlayerOptions();
         bpo.scenes = scenes;
-        bpo.locationPathName = path;
+        bpo.locationPathName = output;
         bpo.target = target;
         bpo.options = options;
 
