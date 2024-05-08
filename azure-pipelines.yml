@@ -10,11 +10,11 @@ pool:
   name: sehal-local
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-    ls -la
-  displayName: 'Run a multi-line script'
+  - script: |
+      cd cli && npm install
+    displayName: "Installing cli"
