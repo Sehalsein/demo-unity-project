@@ -87,5 +87,9 @@ async function run(
 run({ ...options, unityPath, projectPath })
   .then(() => {
     console.log("Build completed");
+    process.exit(0);
   })
-  .catch(console.error);
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
