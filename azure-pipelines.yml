@@ -7,14 +7,29 @@ variables:
   pnpm_config_cache: $(Pipeline.Workspace)/.pnpm-store
 
 parameters:
-  - name: image
-    displayName: Pool Image
+  - name: target
+    displayName: Build target
     type: string
-    default: ubuntu-latest
+    default: macos
     values:
-    - windows-latest
-    - ubuntu-latest
-    - macOS-latest
+    - macos
+    - windows
+    - linux
+  - name: project
+    displayName: Project path
+    type: string
+    default: '../..'
+  - name: clean
+    displayName: Clean build
+    type: boolean
+    default: false
+  - name: verbose
+    displayName: Verbose
+    type: boolean
+    default: false
+  - name: myString
+    type: string
+    default: a string
 
 trigger:
 - main
@@ -41,6 +56,6 @@ steps:
     displayName: "Install cli"
     
   - script: |
-      pnpm unity:build -t macos -p ../../ -uv 2021.3.38f1 -n AzureBuild -c -v
+      pnpm unity:build -t ${{ parameters.target }} -p ${{ parameters.project }} -uv 2021.3.38f1 -n AzureBuild -c -v
     workingDirectory: 'cli'
     displayName: 'Build unity project'
