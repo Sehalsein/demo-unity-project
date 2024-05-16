@@ -15,6 +15,13 @@ parameters:
     - macos
     - windows
     - linux
+  
+  - name: custom_choices
+    type: object
+    default:
+    - Choice1
+    - Choice2
+    - Choice3
 
 trigger:
 - main
@@ -34,13 +41,3 @@ steps:
       corepack prepare pnpm@latest-9 --activate
       pnpm config set store-dir $(pnpm_config_cache)
     displayName: "Setup pnpm"
-
-  - script: |
-      pnpm install
-    workingDirectory: 'cli'
-    displayName: "Install cli"
-    
-  - script: |
-      pnpm unity:build -t ${{ parameters.target }} -p ../../ -uv 2021.3.38f1 -n AzureBuild -c -v
-    workingDirectory: 'cli'
-    displayName: 'Build unity project'
